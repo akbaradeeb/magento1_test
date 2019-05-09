@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <colorauction translate="label" module="inchoo_orders">
+            <label>Colorauction</label>
+            <sort_order>100</sort_order>
+        </colorauction>
+    </tabs>
+    <sections>
+        <colorauction translate="label" module="inchoo_orders">
+            <label>SMS</label>
+            <tab>colorauction</tab>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+ 
+            <groups>
+                <colorauction_sms_group translate="label" module="inchoo_orders">
+                    <label>SMS</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+ 
+                    <fields>
+                        <colorauction_api_key translate="label">
+                            <label>Api Key: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </colorauction_api_key>
+                        <colorauction_order_success translate="label">
+                            <label>Order Message: </label>
+                            <comment>Message To be send on order success.Variable {{order_no}} will used to show order number</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 
+                        </colorauction_order_success>
+                    </fields>
+                </colorauction_sms_group>
+            </groups>
+        </colorauction>
+    </sections>
+</config>

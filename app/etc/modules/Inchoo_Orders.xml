@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Inchoo_Orders>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Inchoo_Orders>
+    </modules>
+</config>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Whirldata_Manivannan>
+            <version>0.1.0</version>
+        </Whirldata_Manivannan>
+    </modules>
+
+    <global>
+        <blocks>
+            <manivannan>
+                <class>Whirldata_Manivannan_Block</class>
+            </manivannan> 
+        </blocks>
+    </global>
+    <frontend>
+        <routers>
+            <manivannan>
+                <use>standard</use>
+                <args>
+                    <module>Whirldata_Manivannan</module>
+                    <frontName>manivannan</frontName>
+                </args>
+            </manivannan>
+            <checkout>
+                <args>
+                    <modules>
+                        <Whirldata_Manivannan before="Mage_Checkout">Whirldata_Manivannan</Whirldata_Manivannan>
+                    </modules>
+                </args>
+            </checkout>
+        </routers>
+    </frontend>
+</config>

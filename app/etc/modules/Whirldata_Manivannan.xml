@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Whirldata_Manivannan>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Whirldata_Manivannan>
+    </modules>
+</config>

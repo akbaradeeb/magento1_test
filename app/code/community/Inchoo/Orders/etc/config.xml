@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+ 
+<config>
+    <modules>
+        <Inchoo_Orders>
+            <version>0.0.0.1</version>
+        </Inchoo_Orders>
+    </modules>
+ 
+    <global>
+        <models>
+            <inchoo_orders>
+                <class>Inchoo_Orders_Model</class>
+                <resourceModel>inchoo_orders_resource</resourceModel>
+            </inchoo_orders>
+        </models>
+ 
+        <resources>
+            <inchoo_orders_setup>
+                <setup>
+                    <module>Inchoo_Orders</module>
+                </setup>
+            </inchoo_orders_setup>
+        </resources>
+ 
+        <blocks>
+            <inchoo_orders>
+                <class>Inchoo_Orders_Block</class>
+            </inchoo_orders>
+        </blocks>
+ 
+        <helpers>
+            <inchoo_orders>
+                <class>Inchoo_Orders_Helper</class>
+            </inchoo_orders>
+        </helpers>
+    </global>
+ 
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <inchoo_orders before="Mage_Adminhtml">Inchoo_Orders_Adminhtml</inchoo_orders>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <colorauction>
+                                            <title>Inchoo - All</title>
+                                        </colorauction>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>
