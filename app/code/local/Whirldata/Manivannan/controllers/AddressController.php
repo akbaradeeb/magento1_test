@@ -25,6 +25,12 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
     {
         $this->loadLayout();
         $this->_initLayoutMessages('customer/session'); 
+
+        /* Adding Shipping Method*/
+        $cart = Mage::getSingleton('checkout/cart');
+        $quote = $cart->getQuote();
+        $cart->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
+
         $this->getLayout()->getBlock('head')->setTitle($this->__('Address'));
         $this->renderLayout();
     }
