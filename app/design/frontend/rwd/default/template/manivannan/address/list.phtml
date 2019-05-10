@@ -23,6 +23,11 @@
  * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+$list = $this->getAddressList();
+$total = count($list);
+$defaultBilling = $this->getDefaultBilling();
+$defaultBillingAddress = $list[$defaultBilling];
+unset($list[$defaultBilling]);
 ?>
 <form id="form-validate-address-list">
     <ul class="form-list">
@@ -31,8 +36,20 @@
             <label for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
             <div class="input-box">
                  <ul>
+                 <!-- Default Billing  -->   
+                 <li> 
+                 <input type="radio" name="billing_address_id" value="<?=$defaultBillingAddress['value']?>">
+
+                 <p><?=$defaultBillingAddress['label']?></p>
+                 <p><a href="#" data-id="<?=$defaultBillingAddress['value']?>" class="delete-address">Delete</a></p>  
+
+                 <div class="action-section">
+                   <div><a href="#">Edit/Change (<?=$total?>)</a></div>  
+                   <div><a href="#">Add New Address</a></div>  
+                 </div>
+                 </li>
                  <?php
-                 $list = $this->getAddressList();
+                 
                  foreach ($list as $key => $address) {
                  ?>
                  <li> 

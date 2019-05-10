@@ -45,9 +45,9 @@ class Whirldata_Manivannan_Block_Address_List extends Mage_Checkout_Block_Onepag
      * Get address List
      */
     public function getAddressList()
-    {
+    {   
         foreach ($this->getCustomer()->getAddresses() as $address) {
-                $options[] = array(
+                $options[$address->getId()] = array(
                     'value' => $address->getId(),
                     'label' => $address->format('html')
                 );
@@ -100,6 +100,11 @@ class Whirldata_Manivannan_Block_Address_List extends Mage_Checkout_Block_Onepag
     {
         $defaultShipping = Mage::getSingleton('customer/session')->getCustomer()->getDefaultShipping();
         return $this->getAddress()->getId() && $this->getAddress()->getId() == $defaultShipping;
+    }
+
+    public function getDefaultBilling()
+    {
+        return Mage::getSingleton('customer/session')->getCustomer()->getDefaultBilling();
     }
 
     /**

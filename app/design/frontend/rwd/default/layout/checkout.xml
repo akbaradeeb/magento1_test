@@ -548,7 +548,9 @@ One page checkout order review block
         <reference name="right">
             <action method="unsetChildren"></action>
             <remove name="sale.reorder.sidebar" />
-            <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
+            <block type="core/template" name="shipping_totals" as="totals" template="manivannan/address/shipping.phtml"/>
+            <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="manivannan/address/totals.phtml"/>
+            
         </reference>
 
         <label>Customer Shared Wishlist View</label>
