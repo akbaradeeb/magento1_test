@@ -567,5 +567,6 @@ One page checkout order review block
             </block>    
         </reference>
     </checkout_address_index>
+ 
 
 </layout>

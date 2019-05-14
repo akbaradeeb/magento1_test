@@ -33,24 +33,9 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
 
         $this->getLayout()->getBlock('head')->setTitle($this->__('Address'));
         $this->renderLayout();
-    }
-    
-    public function addAction()
-    {
-        echo "Add Address";
-    }
-
-    public function removeAction()
-    {
-        echo "Remove Address";
-    }
+    } 
 
     public function editAction()
-    {
-        echo "Edit Address";
-    }
-
-    public function getAction()
     {
         $addressId = $this->getRequest()->getParam('id');
         $customer  = $this->_getSession()->getCustomer();
