@@ -1,4 +1,5 @@
 <!-- id="co-billing-form" -->
+<div id="form-validate-address-add-popup">
 <form method="post" id="form-validate-address-add">
 <fieldset>
  
@@ -6,7 +7,8 @@
     <?php echo $this->getBlockHtml('formkey')?>
     <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
     <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
-        <h2 class="legend"><?php echo $this->__('Contact Information') ?></h2>
+    <input type="hidden" name="id" id="entity_id" value="" />
+        <h2 class="legend" id="add-new-address-legend"><?php echo $this->__('Add New Address') ?></h2>
         <ul class="form-list">
             <li class="fields">
                 <?php echo $this->getNameBlockHtml() ?>
@@ -74,7 +76,7 @@
                         </select>
                         <script type="text/javascript">
                         //<![CDATA[
-                            $('region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+                            jQuery('region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
                         //]]>
                         </script>
                         <input type="text" id="region" name="region" value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>"  title="<?php echo $this->__('State/Province') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" />
@@ -123,42 +125,82 @@
      
 </fieldset>
 </form>
-
+</div>
 <script type="text/javascript">
 //<![CDATA[
 
     var dataForm = new VarienForm('form-validate-address-add', true);
-    new RegionUpdater('country_id', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+    var regionUpdate = new RegionUpdater('country_id', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
 
     jQuery(document).ready(function(e){
         jQuery("#form-validate-address-add").submit (function(e){
             e.preventDefault();
+            var that = jQuery("#btn-save-address");
             if(dataForm.validator.validate()){
                 var data = Form.serialize("form-validate-address-add");
                 jQuery.ajax({
-                    url:"http://127.0.0.1/magento1/checkout/address/save",
+                    url:"http://127.0.0.1/magento1_test/checkout/address/save",
                     type:"POST",
                     dataType:"json",
                     data:data,
                     beforeSend:function(){
-
+                       $(that).attr("disabled","disabled")  
                     },
                     success:function(r){
-                      jQuery("#form-validate-address-list-div").html(r.html)
+                       $(that).removeAttr("disabled")  
+                       jQuery("#form-validate-address-list-div").html(r.html)
+                       emptyForm()
                     }
                 })
             }
-        })         
-    })
+        })
 
-    jQuery(document).ready(function(e){         
+        /**
+         * Edit  
+         */    
+        /* Delete Address */
+        jQuery("#form-validate-address-list-div").delegate(".edit-address","click",function(e){
+            e.preventDefault();
+            var that = jQuery(this);
+            var id = jQuery(that).data("id");
+            jQuery.ajax({
+                url:"http://127.0.0.1/magento1_test/checkout/address/get",
+                type:"GET",
+                dataType:"json",
+                data:{id:id},
+                beforeSend:function(){
+                   jQuery("#add-new-address-legend").text("Edit Address")
+                },
+                success:function(r){
+
+                   if(r.status=="success"){
+                         var data = r.data;             
+                         jQuery("#entity_id").val(data.entity_id);
+                         jQuery("#firstname").val(data.firstname);
+                         jQuery("#lastname").val(data.lastname);
+                         jQuery("#company").val(data.company);
+                         jQuery("#city").val(data.city);
+                         jQuery("#country_id").val(data.country_id);
+                         jQuery("#region").val(data.region);
+                         jQuery("#zip").val(data.postcode);
+                         jQuery("#telephone").val(data.telephone);
+                         jQuery("#fax").val(data.fax);
+                         jQuery("#region_id").val(data.region_id);
+                         jQuery("#street_1").val(data.street[0]);
+                         jQuery("#street_2").val(data.street[1]); 
+                         regionUpdate.update()
+                   }
+                }
+            })                    
+        })      
+             
         /* Delete Address */
         jQuery(".delete-address").click(function(e){
             e.preventDefault();
             var that = jQuery(this);
             var id = jQuery(that).data("id");
             jQuery.ajax({
-                url:"http://127.0.0.1/magento1/checkout/address/delete",
+                url:"http://127.0.0.1/magento1_test/checkout/address/delete",
                 type:"POST",
                 dataType:"json",
                 data:{id:id},
@@ -173,7 +215,47 @@
                 }
             })                    
         })
+     
+         
+        jQuery("#add-new-address").click(function(e){
+            e.preventDefault();
+            emptyForm();
+            
+            jQuery.magnificPopup.open({
+                items: {
+                    src: "#form-validate-address-add-popup"
+                },
+                type: 'inline',
+                removalDelay: 300,
+                closeOnBgClick: true,
+                preloader: true,
+                tLoading: '',
+                callbacks: {                     
+                    open: function () {},
+                    beforeClose: function () {},
+                    close: function () {},                    
+                }
+            });
+        })
+ 
     })
 
+   function emptyForm()
+    {
+       jQuery("#entity_id").val('');
+       jQuery("#firstname").val('');
+       jQuery("#lastname").val('');
+       jQuery("#company").val('');
+       jQuery("#city").val('');
+       jQuery("#country_id").val('');
+       jQuery("#region").val('');
+       jQuery("#zip").val('');
+       jQuery("#telephone").val('');
+       jQuery("#fax").val('');
+       jQuery("#region_id").val('');
+       jQuery("#street_1").val('');
+       jQuery("#street_2").val(''); 
+       jQuery("#add-new-address-legend").text("Add New Address")
+    } 
 //]]>
-</script>
+</script> 

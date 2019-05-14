@@ -41,6 +41,7 @@ unset($list[$defaultBilling]);
                  <input type="radio" name="billing_address_id" value="<?=$defaultBillingAddress['value']?>">
 
                  <p><?=$defaultBillingAddress['label']?></p>
+                 <p><a href="#" data-id="<?=$defaultBillingAddress['value']?>" class="edit-address">Edit</a></p>
                  <p><a href="#" data-id="<?=$defaultBillingAddress['value']?>" class="delete-address">Delete</a></p>  
 
                  <div class="action-section">
@@ -56,13 +57,19 @@ unset($list[$defaultBilling]);
                  <input type="radio" name="billing_address_id" value="<?=$address['value']?>">
 
                  <p><?=$address['label']?></p>
+                 <p><a href="#" data-id="<?=$defaultBillingAddress['value']?>" class="edit-address">Edit</a></p>
                  <p><a href="#" data-id="<?=$address['value']?>" class="delete-address">Delete</a></p>  
 
                  </li>
                  <?php
                  }
                  ?>
+                 <li> 
+                    <a href="#" id="add-new-address">Add new address</a>
+                 </li> 
                  </ul>
+
+
             </div>
         </li>
     <?php endif; ?>

@@ -50,6 +50,17 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
         echo "Edit Address";
     }
 
+    public function getAction()
+    {
+        $addressId = $this->getRequest()->getParam('id');
+        $customer  = $this->_getSession()->getCustomer();
+        $address   = $customer->getAddressById($addressId);
+        $data = $address->getData();
+        $data['street'] = $address->getStreet();
+        $resp = array('status'=>'success','data'=>$data);
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($resp));
+    }
+
     public function saveAction()
     {
         
