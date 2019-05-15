@@ -1,7 +1,7 @@
 <?php
 class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_Action
 {   
-
+    protected $_checkout;
     /**
      * Retrieve customer session object
      *
@@ -25,11 +25,22 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
     {
         $this->loadLayout();
         $this->_initLayoutMessages('customer/session'); 
+        $this->getOnepage()->initCheckout();
+         
+        $this->getCheckout()->setStepData('billing', 'allow', true);
+
+        $data = array('address_id'=>'',
+                       
+                      'use_for_shipping'=>1
+                     );
+        /* Adding Shipping Method*/
+        $result = $this->getOnepage()->saveBilling($data,107);
+        $billing = $this->getOnepage()->getQuote()->getBillingAddress();
+        $billing->getCustomerAddressId(); 
 
         /* Adding Shipping Method*/
-        $cart = Mage::getSingleton('checkout/cart');
-        $quote = $cart->getQuote();
-        $cart->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
+        
+        $this->getOnepage()->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
 
         $this->getLayout()->getBlock('head')->setTitle($this->__('Address'));
         $this->renderLayout();
@@ -140,5 +151,23 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
             }
         }
          
+    }
+
+    public function getOnepage()
+    {
+        return Mage::getSingleton('checkout/type_onepage');
+    }
+
+    /**
+     * Retrieve checkout session model
+     *
+     * @return Mage_Checkout_Model_Session
+     */
+    public function getCheckout()
+    {
+        if (empty($this->_checkout)) {
+            $this->_checkout = Mage::getSingleton('checkout/session');
+        }
+        return $this->_checkout;
     } 
 }
