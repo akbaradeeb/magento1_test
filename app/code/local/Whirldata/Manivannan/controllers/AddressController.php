@@ -23,26 +23,25 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
 
     public function indexAction()
     {
+      
+        $this->getOnepage()->initCheckout();
+
+        /***
+         * Checking and adding billing address
+         */
+        $billing = $this->getOnepage()->getQuote()->getBillingAddress();
+        if(empty($billing->getCustomerAddressId())){
+          $address_id = $this->_getAddress();
+          $data = array('address_id'=>'','use_for_shipping'=>1);
+          $result = $this->getOnepage()->saveBilling($data,107);  
+        }
+
+        /* Adding Shipping Method*/
+        $this->getOnepage()->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
+        
         $this->loadLayout();
         $this->_initLayoutMessages('customer/session'); 
-        $this->getOnepage()->initCheckout();
-         
-        $this->getCheckout()->setStepData('billing', 'allow', true);
-
-        $data = array('address_id'=>'',
-                       
-                      'use_for_shipping'=>1
-                     );
-        /* Adding Shipping Method*/
-        $result = $this->getOnepage()->saveBilling($data,107);
-        $billing = $this->getOnepage()->getQuote()->getBillingAddress();
-        $billing->getCustomerAddressId(); 
-
-        /* Adding Shipping Method*/
-        
-        $this->getOnepage()->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
-
-        $this->getLayout()->getBlock('head')->setTitle($this->__('Address'));
+        $this->getLayout()->getBlock('head')->setTitle($this->__('Address List'));
         $this->renderLayout();
     } 
 
@@ -153,6 +152,22 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
          
     }
 
+    public function saveBillingAction()
+    {
+        $address_id = $this->getRequest()->getParam('id');
+
+        if(!empty($address_id)) {
+           $data = array('address_id'=>'','use_for_shipping'=>1);
+           $result = $this->getOnepage()->saveBilling($data,$address_id);
+           $resp = array('status'=>'success','msg'=>'The address has been saved.','url'=>'');
+            
+        } else {
+           $resp = array('status'=>'error','msg'=>'Address is missing.','url'=>'');  
+        }
+        
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($resp));  
+    }
+
     public function getOnepage()
     {
         return Mage::getSingleton('checkout/type_onepage');
@@ -169,5 +184,22 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
             $this->_checkout = Mage::getSingleton('checkout/session');
         }
         return $this->_checkout;
-    } 
+    }
+
+    /**
+     *
+     */
+    private function _getAddress()
+    {
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        $defaultBilling = $customer->getDefaultBilling();
+        if($defaultBilling){
+           echo "dddddd"; 
+        } else {
+           $allAddress = Mage::getModel('customer/address')->getCollection()->setCustomerFilter($customer);       
+           $allAddress->setOrder('entity_id','ASC');
+           $address = $allAddress->getFirstItem();
+           return $address->getId(); 
+        }
+    }  
 }

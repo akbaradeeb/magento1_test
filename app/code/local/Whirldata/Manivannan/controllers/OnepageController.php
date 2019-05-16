@@ -67,7 +67,9 @@ class Whirldata_Manivannan_OnepageController extends Mage_Checkout_Controller_Ac
         if (!$this->getOnepage()->getQuote()->hasItems()
             || $this->getOnepage()->getQuote()->getHasError()
             || $this->getOnepage()->getQuote()->getIsMultiShipping()
-        ) {
+        ) { 
+            var_dump($this->getOnepage()->getQuote()->hasItems());
+            var_dump($this->getOnepage()->getQuote()->getHasError()); die();
             $this->_ajaxRedirectResponse();
             return true;
         }

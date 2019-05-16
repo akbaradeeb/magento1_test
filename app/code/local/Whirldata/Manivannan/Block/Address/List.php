@@ -129,4 +129,10 @@ class Whirldata_Manivannan_Block_Address_List extends Mage_Checkout_Block_Onepag
 
         return $select->getHtml();
     }
+
+    public function getCheckoutBillingAddress()
+    {
+        $onepage = Mage::getSingleton('checkout/type_onepage');
+        return $onepage->getQuote()->getBillingAddress()->getCustomerAddressId();
+    }
 }

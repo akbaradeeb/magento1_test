@@ -133,6 +133,7 @@
     var regionUpdate = new RegionUpdater('country_id', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
 
     jQuery(document).ready(function(e){
+
         jQuery("#form-validate-address-add").submit (function(e){
             e.preventDefault();
             var that = jQuery("#btn-save-address");
@@ -216,7 +217,9 @@
             })                    
         })
      
-         
+        /**
+         * Add New Address Popup
+         */ 
         jQuery("#add-new-address").click(function(e){
             e.preventDefault();
             emptyForm();
@@ -237,6 +240,54 @@
                 }
             });
         })
+
+        /**
+         * Set Default Shipping Address
+         */ 
+        jQuery(".billing_address_radio").click(function(e){
+            //e.preventDefault(); 
+            var id = jQuery(this).val();
+            jQuery.ajax({
+                url:"http://127.0.0.1/magento1_test/checkout/address/saveBilling",
+                type:"POST",
+                dataType:"json",
+                data:{id:id},
+                beforeSend:function(){
+
+                },
+                success:function(r){
+                   if(r.status=="success"){
+                      alert(r.msg)
+                   }
+                }
+            })
+             
+        })
+
+        /**
+         * Checkout Button
+         */
+        jQuery("#checkout-button").click(function(e){
+            //e.preventDefault(); 
+            var id = jQuery(this).val();
+            var form_key = '<?php echo Mage::getSingleton('core/session')->getFormKey() ?>';
+            alert(3);
+            jQuery.ajax({
+                url:"http://127.0.0.1/magento1_test/checkout/onepage/saveOrder/form_key/"+form_key+'/',
+                type:"POST",
+                dataType:"json",
+                data:{payment:{method:'cashondelivery'}},
+                beforeSend:function(){
+
+                },
+                success:function(r){
+                   if(r.status=="success"){
+                      alert(r.msg)
+                   }
+                }
+            })
+             
+        }) 
  
     })
 

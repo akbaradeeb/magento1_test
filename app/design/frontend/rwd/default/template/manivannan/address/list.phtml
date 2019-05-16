@@ -28,6 +28,8 @@ $total = count($list);
 $defaultBilling = $this->getDefaultBilling();
 $defaultBillingAddress = $list[$defaultBilling];
 unset($list[$defaultBilling]);
+
+$checkout_address = $this->getCheckoutBillingAddress();
 ?>
 <form id="form-validate-address-list">
     <ul class="form-list">
@@ -36,9 +38,12 @@ unset($list[$defaultBilling]);
             <label for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
             <div class="input-box">
                  <ul>
-                 <!-- Default Billing  -->   
+                 <!-- Default Billing  --> 
+                 <?php 
+                 if(!empty($defaultBilling)){
+                 ?>  
                  <li> 
-                 <input type="radio" name="billing_address_id" value="<?=$defaultBillingAddress['value']?>">
+                 <input type="radio" class="billing_address_radio" name="billing_address_id" value="<?=$defaultBillingAddress['value']?>" <?=($checkout_address==$defaultBillingAddress['value'] ? 'checked="checked"' : '')?>>
 
                  <p><?=$defaultBillingAddress['label']?></p>
                  <p><a href="#" data-id="<?=$defaultBillingAddress['value']?>" class="edit-address">Edit</a></p>
@@ -50,18 +55,33 @@ unset($list[$defaultBilling]);
                  </div>
                  </li>
                  <?php
-                 
+                 }
+
+                 $j=1;
                  foreach ($list as $key => $address) {
                  ?>
                  <li> 
-                 <input type="radio" name="billing_address_id" value="<?=$address['value']?>">
+                 <input type="radio" class="billing_address_radio" name="billing_address_id" value="<?=$address['value']?>"
+                 <?=($checkout_address==$address['value'] ? 'checked="checked"' : '')?>
+                 >
 
                  <p><?=$address['label']?></p>
                  <p><a href="#" data-id="<?=$address['value']?>" class="edit-address">Edit</a></p>
                  <p><a href="#" data-id="<?=$address['value']?>" class="delete-address">Delete</a></p>  
 
+                 <?php 
+                  if(empty($defaultBilling) && $j==1){
+                 ?>
+                  <div class="action-section">
+                   <div><a href="#">Edit/Change (<?=$total?>)</a></div>  
+                   <div><a href="#">Add New Address</a></div>  
+                 </div>
+                 <?php   
+                  }
+                 ?>
                  </li>
                  <?php
+                 $j++;
                  }
                  ?>
                  <li> 
