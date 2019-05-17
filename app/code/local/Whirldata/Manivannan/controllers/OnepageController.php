@@ -84,6 +84,25 @@ class Whirldata_Manivannan_OnepageController extends Mage_Checkout_Controller_Ac
     }
 
     /**
+     * Validate ajax request and redirect on failure
+     *
+     * @return bool
+     */
+    protected function _expireAjaxPlaceOrder()
+    {
+        if (!$this->getOnepage()->getQuote()->hasItems()
+            || $this->getOnepage()->getQuote()->getHasError()
+            || $this->getOnepage()->getQuote()->getIsMultiShipping()
+        ) { 
+            var_dump($this->getOnepage()->getQuote()->hasItems());
+            var_dump($this->getOnepage()->getQuote()->getHasError()); die();
+            $this->_ajaxRedirectResponse();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Get shipping method step html
      *
      * @return string
@@ -521,7 +540,7 @@ class Whirldata_Manivannan_OnepageController extends Mage_Checkout_Controller_Ac
             return;
         }
 
-        if ($this->_expireAjax()) {
+        if ($this->_expireAjaxPlaceOrder()) {
             return;
         }
 
@@ -555,6 +574,7 @@ class Whirldata_Manivannan_OnepageController extends Mage_Checkout_Controller_Ac
             $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
             $result['success'] = true;
             $result['error']   = false;
+            $result['redirect_url']   = $redirectUrl;
         } catch (Mage_Payment_Model_Info_Exception $e) {
             $message = $e->getMessage();
             if (!empty($message)) {

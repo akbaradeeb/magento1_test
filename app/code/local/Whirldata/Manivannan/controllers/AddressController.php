@@ -38,7 +38,8 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
 
         /* Adding Shipping Method*/
         $this->getOnepage()->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
-        
+        $this->getOnepage()->savePayment(array('method'=>'cashondelivery'));
+
         $this->loadLayout();
         $this->_initLayoutMessages('customer/session'); 
         $this->getLayout()->getBlock('head')->setTitle($this->__('Address List'));
