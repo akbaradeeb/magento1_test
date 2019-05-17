@@ -255,8 +255,9 @@
                 beforeSend:function(){
 
                 },
-                success:function(r){
+                success:function(r){ 
                    if(r.status=="success"){
+                      jQuery("#onepage_totals").html(r.html)
                       alert(r.msg)
                    }
                 }
@@ -267,27 +268,43 @@
         /**
          * Checkout Button
          */
-        jQuery("#checkout-button").click(function(e){
-            //e.preventDefault(); 
+        jQuery("#total_container").delegate("#checkout-button","click",function(e){
+            e.preventDefault(); 
             var id = jQuery(this).val();
             var form_key = '<?php echo Mage::getSingleton('core/session')->getFormKey() ?>';
-            alert(3);
+            var that     = jQuery(this);
+
             jQuery.ajax({
                 url:"http://127.0.0.1/magento1_test/checkout/onepage/saveOrder/form_key/"+form_key+'/',
                 type:"POST",
                 dataType:"json",
                 data:{payment:{method:'cashondelivery'}},
                 beforeSend:function(){
-
+                    jQuery(that).val('Wait...')
                 },
                 success:function(r){
-                   if(r.status=="success"){
-                      alert(r.msg)
+                   if(r.success){
+                      window.location.href = "http://127.0.0.1/magento1_test/checkout/onepage/success/"
                    }
                 }
             })
              
         }) 
+
+        /**
+         * Loading Default
+         */
+        jQuery.ajax({
+                url:"http://127.0.0.1/magento1_test/checkout/address/getTotal/",
+                type:"GET",
+                dataType:"json", 
+                beforeSend:function(){
+
+                },
+                success:function(r){
+                  jQuery("#onepage_totals").html(r.html)  
+                }
+            }) 
  
     })
 

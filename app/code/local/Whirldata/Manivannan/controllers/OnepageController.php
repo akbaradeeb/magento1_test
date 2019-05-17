@@ -572,6 +572,8 @@ class Whirldata_Manivannan_OnepageController extends Mage_Checkout_Controller_Ac
             $this->getOnepage()->saveOrder();
 
             $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
+            $redirectUrl = $this->getOnepage()->getQuote()->getPayment()->getCheckoutRedirectUrl();
+            
             $result['success'] = true;
             $result['error']   = false;
             $result['redirect_url']   = $redirectUrl;

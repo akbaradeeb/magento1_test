@@ -22,13 +22,17 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
     }
 
     public function indexAction()
-    {
-      
+    {   
+        /*Checking If Cart has item or not*/
+        $quote = $this->getOnepage()->getQuote();
+        if (!$quote->hasItems() || $quote->getHasError()) {
+            $this->_redirect('checkout/cart');
+            return;
+        }
+
         $this->getOnepage()->initCheckout();
 
-        /***
-         * Checking and adding billing address
-         */
+        /*Checking and adding billing address*/
         $billing = $this->getOnepage()->getQuote()->getBillingAddress();
         if(empty($billing->getCustomerAddressId())){
           $address_id = $this->_getAddress();
@@ -36,10 +40,11 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
           $result = $this->getOnepage()->saveBilling($data,107);  
         }
 
-        /* Adding Shipping Method*/
+        /*Adding Shipping and Payment Method*/
         $this->getOnepage()->getQuote()->getShippingAddress()->setShippingMethod('flatrate_flatrate')->save();
-        $this->getOnepage()->savePayment(array('method'=>'cashondelivery'));
-
+        $this->getOnepage()->savePayment(array('method'=>'cashondelivery')); 
+        
+        /*Loading Layout*/
         $this->loadLayout();
         $this->_initLayoutMessages('customer/session'); 
         $this->getLayout()->getBlock('head')->setTitle($this->__('Address List'));
@@ -160,13 +165,24 @@ class Whirldata_Manivannan_AddressController extends Mage_Core_Controller_Front_
         if(!empty($address_id)) {
            $data = array('address_id'=>'','use_for_shipping'=>1);
            $result = $this->getOnepage()->saveBilling($data,$address_id);
-           $resp = array('status'=>'success','msg'=>'The address has been saved.','url'=>'');
+
+           $block = $this->getLayout()->createBlock('checkout/cart_totals')->setTemplate('manivannan/address/totals.phtml');
+           $html = $block->toHtml();
+           $resp = array('status'=>'success','msg'=>'The address has been saved.','html'=>$html);
             
         } else {
            $resp = array('status'=>'error','msg'=>'Address is missing.','url'=>'');  
         }
         
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($resp));  
+    }
+
+    public function getTotalAction()
+    {
+        $block = $this->getLayout()->createBlock('checkout/cart_totals')->setTemplate('manivannan/address/totals.phtml');
+        $html = $block->toHtml();
+        $resp = array('status'=>'success','msg'=>'','html'=>$html);
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($resp)); 
     }
 
     public function getOnepage()
